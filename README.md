@@ -1,140 +1,56 @@
-# AI Testing Project — RAG Application Evaluation
+# SubscriptionRAGAgent — AI Testing Project
 
-A hands-on AI testing project focused on evaluating LLM response quality and retrieval effectiveness using Python, pytest, and DeepEval.
+A hands-on project focused on testing a Retrieval-Augmented Generation (RAG) application using Python, pytest, and DeepEval.
 
-## Project Overview
+## Overview
 
-This project demonstrates automated testing of a Retrieval-Augmented Generation (RAG) application that answers questions using a sample subscription-policy knowledge base.
+I built an automated evaluation suite for a subscription-policy RAG application. The tests check answer quality, retrieval effectiveness, and how the application handles questions when policy information is missing or insufficient.
 
-The tests evaluate whether AI-generated answers are supported by retrieved context, whether responses are relevant to user questions, and whether relevant policy documents are retrieved.
+## Tech Stack
 
-**Project type:** Personal learning and portfolio project.
-
-## Technology Stack
-
-- Python
-- pytest
+- Python and pytest
 - DeepEval
+- LangChain
 - OpenAI API
 - RAG evaluation
 
-## Testing Scope
+## What I Tested
 
-### Faithfulness
-Evaluates whether AI-generated claims are supported by the retrieved context.
+- **Faithfulness:** Checks whether answers are supported by retrieved context.
+- **Answer Relevancy:** Checks whether answers address the user's questions.
+- **Contextual Relevancy:** Checks whether retrieved information is relevant to the question.
+- **Contextual Precision:** Evaluates the ranking of relevant and irrelevant retrieved information.
+- **Contextual Recall:** Checks whether the retrieved context contains the information needed to support the expected answer.
 
-A negative test supplies an incorrect answer guaranteeing a full refund, contradicting the policy. DeepEval returned a faithfulness score of `0.0` for this answer.
+I also used parameterized test data, reusable metric factories, and pytest fixtures to organize the test suite.
 
-### Answer Relevancy
-Evaluates whether the generated answer addresses the user's question.
+## Initial Results
 
-### Contextual Precision
-Evaluates whether relevant information is ranked appropriately in the retrieved context.
+- Contextual Precision: 3/3 tests passed (scores: 1.00, 1.00, 0.83).
+- Contextual Recall: 3/3 tests passed (all scores: 1.00).
+- A deliberately contradictory refund answer received a Faithfulness score of 0.0.
 
-### Contextual Recall
-Evaluates whether the retrieved context contains the information needed to answer the question.
-
-## Test Scenarios
-
-- Verify relevant policy retrieval for different question phrasings.
-- Check whether expected policy documents appear in the top retrieved results.
-- Evaluate subscription, cancellation, and refund answers.
-- Detect unsupported claims and contradictions with retrieved context.
-- Check how the application responds when policy information is insufficient.
-- Evaluate a small dataset using multiple DeepEval metrics.
-
-## Project Structure
-
-```text
-SubscriptionRAGAgent/
-├── app/
-├── tests/
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
+These results are from a small test dataset and are intended for learning and experimentation.
 
 ## Setup
 
-### Prerequisites
-- Python 3.13 or a compatible version
-- Git
-- An OpenAI API key with access to the configured models
+1. Clone the repository.
+2. Create and activate a Python virtual environment.
+3. Install dependencies:
 
-### 1. Clone the repository
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
 
-```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd SubscriptionRAGAgent
-```
+4. Create a `.env` file with the required OpenAI API key and model configuration.
+5. Run the tests:
 
-### 2. Create and activate a virtual environment
+   ```bash
+   python -m pytest tests/ -v
+   ```
 
-On Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-### 3. Install dependencies
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### 4. Configure environment variables
-
-Create a local `.env` file in the project root:
-
-```env
-OPENAI_API_KEY=your_api_key_here
-OPENAI_MODEL=gpt-4.1-mini
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-```
-
-Use your own API key. Never commit `.env` or expose credentials.
-
-### 5. Run the tests
-
-```bash
-python -m pytest tests/test_retrieval.py -v -s
-python -m pytest tests/test_deepeval_rag.py -v -s
-python tests/test_rag_dataset.py
-python -m pytest tests/test_eval_valuator.py -v -s
-```
-
-Run all pytest-discoverable tests:
-
-```bash
-python -m pytest tests/ -v -s
-```
-
-Some tests make external API calls and may incur charges.
-
-## Initial Evaluation Results
-
-The initial dataset evaluation used three test cases.
-
-| Metric | Score | Passed |
-|---|---:|---:|
-| Contextual Precision | 1.00 | 3/3 |
-| Contextual Recall | 1.00 | 3/3 |
-| Answer Relevancy | 1.00 | 3/3 |
-| Faithfulness | 1.00 | 3/3 |
-
-A separate negative test returned a faithfulness score of `0.0` for a deliberately contradictory refund answer.
-
-These are initial results from a small dataset, not a comprehensive benchmark or a guarantee of production readiness.
-
-## Future Improvements
-
-- Add prompt-injection and adversarial test scenarios.
-- Test missing, incomplete, and conflicting retrieval context.
-- Expand the evaluation dataset.
-- Track evaluation results across prompt and retrieval changes.
-- Add continuous integration for automated test execution.
+Some tests call external APIs and may incur charges.
 
 ## Disclaimer
 
-This is an independent portfolio project using sample subscription policies. It is not a production customer-support system.
+An independent learning and portfolio project using sample subscription policies. Not intended for production use.
